@@ -110,13 +110,6 @@ def discretisation_variables_from_chi2(X_train_quanti) :
         
     """ cette fonction permet de discrétiser les variables """  
 
-    X_train_quanti.loc[ X_train_quanti['IRPAR_USAGE_V12_MAX'] <= 2, 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_1' 
-
-    X_train_quanti.loc[(X_train_quanti['IRPAR_USAGE_V12_MAX'] > 2) & (X_train_quanti['IRPAR_USAGE_V12_MAX'] <= 4), 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_2'
-
-    X_train_quanti.loc[  (X_train_quanti['IRPAR_USAGE_V12_MAX'] > 4) & (X_train_quanti['IRPAR_USAGE_V12_MAX'] <= 10), 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_3'
-
-    
 #################################################################
 
     X_train_quanti.loc[ (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] < 7683.976) , 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_1'
@@ -261,17 +254,19 @@ def discretisation_variables_from_chi2(X_train_quanti) :
 
 # verification par group by 
 
-def verification_par_moyenne_defaut(x,y) :
+def verification_par_moyenne_defaut(x,y,type="quanti"):
     
     """ cette fonction permet d'afficher le taux moyen de defaut pour chaque var ( verifier si les modalités crées sont pertinentes"""
     
     colonnes_a_verifier = []
     colonnes = x.columns.tolist() 
     x=pd.concat([x.reset_index(),y.reset_index()],axis=1)
-    for col in colonnes :  # on prend que les variables qui commencent par g_ car c'est les variables discrétiser 
-        if 'g_' in col : 
-            colonnes_a_verifier.append(col) 
-    
+    if type == "quanti":
+        for col in colonnes :  # on prend que les variables qui commencent par g_ car c'est les variables discrétiser 
+            if 'g_' in col : 
+                colonnes_a_verifier.append(col) 
+    else: 
+        colonnes_a_verifier=colonnes
     for var in colonnes_a_verifier : 
         defaut = x.groupby(var).mean()['defaut_36mois']
         print(f'------ pour la variable {var} : ' )

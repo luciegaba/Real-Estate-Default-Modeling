@@ -80,3 +80,54 @@ def imputation_for_na(X):
             X[col]=X[col].fillna(X[col].median())
     print("OK")
     return X
+
+
+
+#On établi les 3 dictionnaires pour les variables socio-démographique
+
+def replace_if_not_in(x,list_geo,col):
+    if x not in list_geo:
+        return col.value_counts().idxmax()
+    else: 
+        return x
+def proxys_processing(df,richesse,chomage,inondation):
+    richesse.set_index("Unnamed: 0",inplace=True)
+    chomage.set_index("Code",inplace=True)
+    inondation.set_index("Commune",inplace=True)
+    dictionary_chomage=chomage.to_dict()['MOYENNE']
+    dictionary_hlm=richesse.to_dict()['Taux de logements sociaux']
+    dictionary_prix_loyer=richesse.to_dict()['Loyer moyen par mètre carré de surface habitable (en €)']
+    dictionary_innondation=inondation.to_dict()['Somme de nb_com_ddrm']
+    departement_proxy=chomage.index.astype(str).tolist()
+    codes_postaux_proxy=inondation.index.astype(str).tolist()
+    df['DEPARTEMENT_CRI']=df['DEPARTEMENT_CRI'].astype(str).apply(lambda x: replace_if_not_in(x,departement_proxy,df["DEPARTEMENT_CRI"]))
+    df["TAUX_HLM"]=df["DEPARTEMENT_CRI"].astype(str).map(dictionary_hlm)
+    df["TAUX_CHOMAGE"]=df["DEPARTEMENT_CRI"].astype(str).map(dictionary_chomage)
+    df["PRIX_LOYER"]=df["DEPARTEMENT_CRI"].map(dictionary_prix_loyer)
+    df["TAUX_HLM"]=df["TAUX_HLM"].fillna(df["TAUX_HLM"].median())
+    df["TAUX_CHOMAGE"]=df["TAUX_CHOMAGE"].fillna(df["TAUX_CHOMAGE"].median())
+    df["PRIX_LOYER"]=df["PRIX_LOYER"].fillna(df["PRIX_LOYER"].median())
+
+
+def replace_if_not_in(x,list_geo,col):
+    if x not in list_geo:
+        return col.value_counts().idxmax()
+    else: 
+        return x
+def proxys_processing(df,richesse,chomage,inondation):
+    richesse.set_index("Unnamed: 0",inplace=True)
+    chomage.set_index("Code",inplace=True)
+    inondation.set_index("Commune",inplace=True)
+    dictionary_chomage=chomage.to_dict()['MOYENNE']
+    dictionary_hlm=richesse.to_dict()['Taux de logements sociaux']
+    dictionary_prix_loyer=richesse.to_dict()['Loyer moyen par mètre carré de surface habitable (en €)']
+    dictionary_innondation=inondation.to_dict()['Somme de nb_com_ddrm']
+    departement_proxy=chomage.index.astype(str).tolist()
+    codes_postaux_proxy=inondation.index.astype(str).tolist()
+    df['DEPARTEMENT_CRI']=df['DEPARTEMENT_CRI'].astype(str).apply(lambda x: replace_if_not_in(x,departement_proxy,df["DEPARTEMENT_CRI"]))
+    df["TAUX_HLM"]=df["DEPARTEMENT_CRI"].astype(str).map(dictionary_hlm)
+    df["TAUX_CHOMAGE"]=df["DEPARTEMENT_CRI"].astype(str).map(dictionary_chomage)
+    df["PRIX_LOYER"]=df["DEPARTEMENT_CRI"].map(dictionary_prix_loyer)
+    df["TAUX_HLM"]=df["TAUX_HLM"].fillna(df["TAUX_HLM"].median())
+    df["TAUX_CHOMAGE"]=df["TAUX_CHOMAGE"].fillna(df["TAUX_CHOMAGE"].median())
+    df["PRIX_LOYER"]=df["PRIX_LOYER"].fillna(df["PRIX_LOYER"].median())
