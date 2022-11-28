@@ -1,6 +1,9 @@
 import pandas as pd
 import optbinning
 from sklearn.preprocessing import LabelEncoder
+
+
+
 def liste_quali_a_regrouper(X):
     liste_inf_5_modalites=[]
     liste_sup_5_modalites=[]
@@ -15,7 +18,7 @@ def liste_quali_a_regrouper(X):
 
 
 
-def replace_encoding_with_grouping(X_train):
+""" def replace_encoding_with_grouping(X_train):
 
     COD_USAGE_BIEN_CRI={"10":"residence principale", 
     "20": "residence secondaire", 
@@ -112,7 +115,7 @@ def replace_encoding_with_grouping(X_train):
     X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"]=X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"].map(COD_SIT_FAM_EMPRUNTEUR_CRI)
     X_train["COD_TYPE_MARCHE_CRI"]=X_train["COD_TYPE_MARCHE_CRI"].map(COD_TYPE_MARCHE_CRI)
     X_train["CSP_RGP_BRP"]=X_train["CSP_RGP_BRP"].map(CSP_RGP_BRP)
-    return X_train
+    return X_train"""
 
 
 
@@ -148,48 +151,9 @@ def regrouper_modalites(X,y,liste,drop=False):
 
 
 
-def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,encoding=False):
-    le = LabelEncoder()
-    dict_all = dict(zip([], []))
-    if liste==None:
-        for col in X_train.select_dtypes(include="O").columns:
-            optb = optbinning.OptimalBinning(name=col,dtype="categorical",cat_cutoff=cat_cutoff)
-            optb.fit(X_train[col],y_train)
-            print("################################", col, "################################")
-            print("STATUS :",optb.status)
-            display(optb.binning_table.build())
-            print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
-
-            if encoding==True:
-                binned_var=optb.transform(X_train[col],metric="bins")
-                print("ENCODING...")
-                temp_keys = X_train[col].values
-                temp_values = le.fit_transform(binned_var)
-                dict_temp = dict(zip(temp_keys, temp_values))
-                dict_all[col] = dict_temp
- 
-        return dict_all
-    else:
-        for col in liste: 
-            optb = optbinning.OptimalBinning(name=col,dtype="categorical",cat_cutoff=cat_cutoff)
-            optb.fit(X_train[col],y_train)
-            print("################################", col, "################################")
-            print("STATUS :",optb.status)
-            display(optb.binning_table.build())
-            print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
-            if encoding==True:
-                binned_var=optb.transform(X_train[col],metric="bins")
-                print(X_train[col].value_counts())
-                print("ENCODING...")
-                temp_keys = X_train[col].values
-                temp_values = le.fit_transform(binned_var)
-                dict_temp = dict(zip(temp_keys, temp_values))
-                dict_all[col] = dict_temp
-
-        return dict_all
     
 
-def replace_encoding_by_real_mod(X_train):
+def replace_encoding_by_real_mod(X):
 
     COD_USAGE_BIEN_CRI={"10":"residence principale", 
     "20": "residence secondaire", 
@@ -271,17 +235,16 @@ def replace_encoding_by_real_mod(X_train):
     "8.0":"autres personnes sans activité professionnelle",
     "nan": "autres personnes sans activité professionnelle"}
 
-
-    X_train["COD_USAGE_BIEN_CRI"]=X_train["COD_USAGE_BIEN_CRI"].map(COD_USAGE_BIEN_CRI)
-    X_train["QUA_INT_MAX_BRP"]=X_train["QUA_INT_MAX_BRP"].map(QUA_INT_MAX_BRP)
-    X_train["COD_ETA_BIEN_CRI"]=X_train["COD_ETA_BIEN_CRI"].map(COD_ETA_BIEN_CRI)
-    X_train["CODTYP_CRT_TRAVAIL_CRI"]=X_train["CODTYP_CRT_TRAVAIL_CRI"].map(CODTYP_CRT_TRAVAIL_CRI)
-    X_train["CODTYPE_PROJET_CRI"]=X_train["CODTYPE_PROJET_CRI"].map(CODTYPE_PROJET_CRI)
-    X_train["COD_SITU_LOGT_CRI"]=X_train["COD_SITU_LOGT_CRI"].map(COD_SITU_LOGT_CRI)
-    X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"]=X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"].map(COD_SIT_FAM_EMPRUNTEUR_CRI)
-    X_train["COD_TYPE_MARCHE_CRI"]=X_train["COD_TYPE_MARCHE_CRI"].map(COD_TYPE_MARCHE_CRI)
-    X_train["CSP_RGP_BRP"]=X_train["CSP_RGP_BRP"].map(CSP_RGP_BRP)
-    return X_train
+    X["COD_USAGE_BIEN_CRI"]=X["COD_USAGE_BIEN_CRI"].map(COD_USAGE_BIEN_CRI)
+    X["QUA_INT_MAX_BRP"]=X["QUA_INT_MAX_BRP"].map(QUA_INT_MAX_BRP)
+    X["COD_ETA_BIEN_CRI"]=X["COD_ETA_BIEN_CRI"].map(COD_ETA_BIEN_CRI)
+    X["CODTYP_CRT_TRAVAIL_CRI"]=X["CODTYP_CRT_TRAVAIL_CRI"].map(CODTYP_CRT_TRAVAIL_CRI)
+    X["CODTYPE_PROJET_CRI"]=X["CODTYPE_PROJET_CRI"].map(CODTYPE_PROJET_CRI)
+    X["COD_SITU_LOGT_CRI"]=X["COD_SITU_LOGT_CRI"].map(COD_SITU_LOGT_CRI)
+    X["COD_SIT_FAM_EMPRUNTEUR_CRI"]=X["COD_SIT_FAM_EMPRUNTEUR_CRI"].map(COD_SIT_FAM_EMPRUNTEUR_CRI)
+    X["COD_TYPE_MARCHE_CRI"]=X["COD_TYPE_MARCHE_CRI"].map(COD_TYPE_MARCHE_CRI)
+    X["CSP_RGP_BRP"]=X["CSP_RGP_BRP"].map(CSP_RGP_BRP)
+    return X
 
 
 
@@ -293,3 +256,59 @@ def encoding_col_and_cat(X,dict_encoding,list_quali_var):
         X[col]=X[col].fillna(X[col].mode()[0])
         X[col]=X[col].astype("category")
  
+
+def select_quali_variables(X_train_quali,y,seuil_diff_tx_moyen):
+    quali_too_low_mod=[]
+    quali_no_discriminant=[]
+    quali_good=[]
+    for col in X_train_quali.columns.tolist():
+        test=pd.concat([y.reset_index(drop=True),X_train_quali[col].reset_index(drop=True)],axis=1)
+        moyenne_defaut_per_mod=test.groupby([col])["defaut_36mois"].agg("mean").sort_values()
+        if X_train_quali[col].nunique()<2:
+            quali_too_low_mod.append(col)
+        elif moyenne_defaut_per_mod.diff().abs().min()<seuil_diff_tx_moyen:
+            quali_no_discriminant.append(col)
+        else:
+            quali_good.append(col)
+    return quali_too_low_mod,quali_no_discriminant,quali_good
+
+def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,min_event_rate_diff=0.01,encoding=False):
+    le = LabelEncoder()
+    dict_all = dict(zip([], []))
+    if liste==None:
+        for col in X_train.select_dtypes(include="O").columns:
+            optb = optbinning.OptimalBinning(name=col,dtype="categorical",cat_cutoff=cat_cutoff,min_event_rate_diff=min_event_rate_diff)
+
+            optb.fit(X_train[col],y_train)
+            print("################################", col, "################################")
+            print("STATUS :",optb.status)
+            display(optb.binning_table.build())
+            print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
+
+            if encoding==True:
+                binned_var=optb.transform(X_train[col],metric="bins")
+                print("ENCODING...")
+                temp_keys = X_train[col].values
+                temp_values = le.fit_transform(binned_var)
+                dict_temp = dict(zip(temp_keys, temp_values))
+                dict_all[col] = dict_temp
+ 
+        return dict_all
+    else:
+        for col in liste: 
+            optb = optbinning.OptimalBinning(name=col,dtype="categorical",cat_cutoff=cat_cutoff,min_event_rate_diff=min_event_rate_diff)
+            optb.fit(X_train[col],y_train)
+            print("################################", col, "################################")
+            print("STATUS :",optb.status)
+            display(optb.binning_table.build())
+            print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
+            if encoding==True:
+                binned_var=optb.transform(X_train[col],metric="bins")
+                print(X_train[col].value_counts())
+                print("ENCODING...")
+                temp_keys = X_train[col].values
+                temp_values = le.fit_transform(binned_var)
+                dict_temp = dict(zip(temp_keys, temp_values))
+                dict_all[col] = dict_temp
+
+        return dict_all

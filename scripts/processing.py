@@ -85,11 +85,7 @@ def imputation_for_na(X):
 
 #On établi les 3 dictionnaires pour les variables socio-démographique
 
-def replace_if_not_in(x,list_geo,col):
-    if x not in list_geo:
-        return col.value_counts().idxmax()
-    else: 
-        return x
+
 def proxys_processing(df,richesse,chomage,inondation):
     richesse.set_index("Unnamed: 0",inplace=True)
     chomage.set_index("Code",inplace=True)

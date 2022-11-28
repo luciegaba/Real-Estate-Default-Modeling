@@ -207,15 +207,15 @@ def discretisation_variables_from_chi2(X_train_quanti) :
     X_train_quanti.loc[ (X_train_quanti['BEST_APPORT_TX_BRP'] <= 1.8)  , 'g_BEST_APPORT_TX_BRP' ] = 'grp_4' 
 
 ###########################t########################################
-    X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 82262.854) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 112500.0 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_1' 
 
-    X_train_quanti.loc[ ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
-                       ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 112500) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
-                        , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
+    #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 82262.854) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 112500.0 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_1' 
+
+   # X_train_quanti.loc[ ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
+     #                  ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 112500) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
+     #                   , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
 
 
-    X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 298000) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 4600000 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_3' 
-    
+    #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 298000) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 4600000 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_3' 
     
     
 ############################################
