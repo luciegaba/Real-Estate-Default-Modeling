@@ -286,8 +286,9 @@ def replace_encoding_by_real_mod(X_train):
 
 
 
-def encoding_col_and_cat(X,dict_encoding):
-    for col in X.select_dtypes(include="object").columns:
+def encoding_col_and_cat(X,dict_encoding,list_quali_var):
+    for col in list_quali_var:
+        X[col]=X[col].fillna(X[col].mode()[0])
         X[col].replace(dict_encoding[col], inplace=True)
         X[col]=X[col].fillna(X[col].mode()[0])
         X[col]=X[col].astype("category")
