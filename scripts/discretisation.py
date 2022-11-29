@@ -120,99 +120,99 @@ def discretisation_variables_from_chi2(X_train_quanti) :
     X_train_quanti.loc[ (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] < 7683.976) , 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_1'
 
     X_train_quanti.loc[  ((X_train_quanti['MNT_TOT_ASSURANCE_CRI'] > 7683.976) & 
-                          (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=17283.191)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_2'
+              (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=17283.191)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_2'
 
     X_train_quanti.loc[  ((X_train_quanti['MNT_TOT_ASSURANCE_CRI'] > 17283.191) &
-                          (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=246495.03)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_3'
+              (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=246495.03)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_3'
 
 
-#################################################################
+    #################################################################
 
     X_train_quanti.loc[(X_train_quanti['COUT_RACHAT_BRP'] >38969.08) & (X_train_quanti['COUT_RACHAT_BRP'] <= 183761.202), 'g_COUT_RACHAT_BRP' ] = 'grp_1'
 
     X_train_quanti.loc[  ((X_train_quanti['COUT_RACHAT_BRP'] >183761.202) & (X_train_quanti['COUT_RACHAT_BRP'] <= 1826635.0)) 
-                       , 'g_COUT_RACHAT_BRP' ] = 'grp_2'
+           , 'g_COUT_RACHAT_BRP' ] = 'grp_2'
 
     X_train_quanti.loc[  (X_train_quanti['COUT_RACHAT_BRP'] <= 38969.08)  , 'g_COUT_RACHAT_BRP' ] = 'grp_3'
 
 
-###################################################################
+    ###################################################################
 
-X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 67923.25 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 88544.561 )) |
-(X_train_quanti['SUM_RESS_REVENUS_BRP'] <= 28309.875)  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_1' 
+    X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 67923.25 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 88544.561 )) |
+    (X_train_quanti['SUM_RESS_REVENUS_BRP'] <= 28309.875)  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_1' 
 
-X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 42338.0 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 67923.25 ))  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_2' 
+    X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 42338.0 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 67923.25 ))  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_2' 
 
-X_train_quanti['g_SUM_RESS_REVENUS_BRP'] = X_train_quanti['g_SUM_RESS_REVENUS_BRP'] .replace(np.nan, 'grp_3')
-
-
+    X_train_quanti['g_SUM_RESS_REVENUS_BRP'] = X_train_quanti['g_SUM_RESS_REVENUS_BRP'] .replace(np.nan, 'grp_3')
 
 
-#####################################################################
+
+
+    #####################################################################
 
 
     X_train_quanti.loc[ (X_train_quanti['SUM_PATR_IMMO_BRP'] > 160000.0) & (X_train_quanti['SUM_PATR_IMMO_BRP'] <= 250000.0), 'g_SUM_PATR_IMMO_BRP' ] = 'grp_1' 
 
     X_train_quanti['g_SUM_PATR_IMMO_BRP'] = X_train_quanti['g_SUM_PATR_IMMO_BRP'].replace(np.nan, 'grp_2')
 
-###################################################################
+    ###################################################################
 
     X_train_quanti.loc[ ((X_train_quanti['quotite'] > 0.0282) & (X_train_quanti['quotite'] <=  0.802)) | 
-                       ((X_train_quanti['quotite'] > 1.019) & (X_train_quanti['quotite'] <= 1.043))
-                       , 'g_quotite' ] = 'grp_1'
+           ((X_train_quanti['quotite'] > 1.019) & (X_train_quanti['quotite'] <= 1.043))
+           , 'g_quotite' ] = 'grp_1'
 
     X_train_quanti.loc[  ((X_train_quanti['quotite'] > 1) & (X_train_quanti['quotite'] <= 1.019)), 'g_quotite' ] = 'grp_2'
 
     X_train_quanti.loc[  ((X_train_quanti['quotite'] > 0.802) & (X_train_quanti['quotite'] <= 0.966)) | 
-                       ((X_train_quanti['quotite'] > 1.043) & (X_train_quanti['quotite'] <= 12.006))
-                       , 'g_quotite' ] = 'grp_3'
+           ((X_train_quanti['quotite'] > 1.043) & (X_train_quanti['quotite'] <= 12.006))
+           , 'g_quotite' ] = 'grp_3'
 
     X_train_quanti.loc[  ((X_train_quanti['quotite'] > 0.966) & (X_train_quanti['quotite'] <=1.0)), 'g_quotite' ] = 'grp_4'
 
-###################################################################
+    ###################################################################
     X_train_quanti.loc[(X_train_quanti['PCT_TEG_TAEG_CRI'] > 0.26 ) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <=  2.077), 'g_PCT_TEG_TAEG_CRI' ] = 'grp_1'
 
     X_train_quanti.loc[  ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.077) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.38)) | 
-                        ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.624) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.84))
-                       , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_2'
+            ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.624) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.84))
+           , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_2'
 
     X_train_quanti.loc[  ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.84) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 3.29)) | 
-                        ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.38) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.624))
-                       , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_3'
+            ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.38) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.624))
+           , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_3'
 
 
     X_train_quanti.loc[  (X_train_quanti['PCT_TEG_TAEG_CRI'] >= 3.29) , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_4'
 
-#######################################################################
+    #######################################################################
 
-X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] < 4500 ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_1' 
+    X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] < 4500 ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_1' 
 
-X_train_quanti.loc[ ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 4500)  & (X_train_quanti['COUT_NOTAIRE_BRP'] < 11200.0 ) )  |
- ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 18500.0)  &  (X_train_quanti['COUT_NOTAIRE_BRP'] < 331240.0 ) ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_2' 
+    X_train_quanti.loc[ ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 4500)  & (X_train_quanti['COUT_NOTAIRE_BRP'] < 11200.0 ) )  |
+    ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 18500.0)  &  (X_train_quanti['COUT_NOTAIRE_BRP'] < 331240.0 ) ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_2' 
 
 
-X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] > 11200 ) & (X_train_quanti['COUT_NOTAIRE_BRP'] < 18500.0 )  , 'g_COUT_NOTAIRE_BRP' ] = 'grp_3' 
+    X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] > 11200 ) & (X_train_quanti['COUT_NOTAIRE_BRP'] < 18500.0 )  , 'g_COUT_NOTAIRE_BRP' ] = 'grp_3' 
 
-###########################t########################################
+    ###########################t########################################
     X_train_quanti.loc[ ((X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5)) |
-                        (X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5) | 
-                       (X_train_quanti['MOY_ANC_PROF_BRP'] > 16)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 49),
-                       'g_MOY_ANC_PROF_BRP' ] = 'grp_1' 
+            (X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5) | 
+           (X_train_quanti['MOY_ANC_PROF_BRP'] > 16)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 49),
+           'g_MOY_ANC_PROF_BRP' ] = 'grp_1' 
 
     X_train_quanti.loc[ (X_train_quanti['MOY_ANC_PROF_BRP'] > 3.5 ) & (X_train_quanti['MOY_ANC_PROF_BRP'] <=  5 ) | 
-                       (X_train_quanti['MOY_ANC_PROF_BRP'] > 11.5 ) & (X_train_quanti['MOY_ANC_PROF_BRP'] <=  16 )
-                       , 'g_MOY_ANC_PROF_BRP' ] = 'grp_2' 
+           (X_train_quanti['MOY_ANC_PROF_BRP'] > 11.5 ) & (X_train_quanti['MOY_ANC_PROF_BRP'] <=  16 )
+           , 'g_MOY_ANC_PROF_BRP' ] = 'grp_2' 
 
     X_train_quanti.loc[ (X_train_quanti['MOY_ANC_PROF_BRP'] <= 3.5 )   , 'g_MOY_ANC_PROF_BRP' ] = 'grp_3'
 
 
-###########################t########################################
+    ###########################t########################################
     X_train_quanti.loc[ (X_train_quanti['nb_pret'] > 1) & (X_train_quanti['nb_pret'] <= 6), 'g_nb_pret' ] = 'grp_1' 
 
     X_train_quanti.loc[(X_train_quanti['nb_pret'] <=1)  , 'g_nb_pret' ] = 'grp_2'
 
 
-###########################t########################################
+    ###########################t########################################
     X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <=36072.915 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_1' 
 
     X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] > 36072.915) &  (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <=59387.94 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_2' 
@@ -220,52 +220,52 @@ X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] > 11200 ) & (X_train_qua
     X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] > 59387.94) &  (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <= 1968134.71) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_3' 
 
 
-###########################t########################################
+    ###########################t########################################
     X_train_quanti.loc[ (X_train_quanti['BEST_APPORT_TX_BRP'] > 29.74) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=97.6 ) , 'g_BEST_APPORT_TX_BRP' ] = 'grp_1' 
 
     X_train_quanti.loc[ ((X_train_quanti['BEST_APPORT_TX_BRP'] > 6.81) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=13.15 )) |
-                       ((X_train_quanti['BEST_APPORT_TX_BRP'] > 16.07) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 29.74 ))
-                        , 'g_BEST_APPORT_TX_BRP' ] = 'grp_2' 
+           ((X_train_quanti['BEST_APPORT_TX_BRP'] > 16.07) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 29.74 ))
+            , 'g_BEST_APPORT_TX_BRP' ] = 'grp_2' 
 
     X_train_quanti.loc[ ((X_train_quanti['BEST_APPORT_TX_BRP'] > 13.15) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=16.07 )) |
-                       ((X_train_quanti['BEST_APPORT_TX_BRP'] >1.8) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 6.81))
-                        , 'g_BEST_APPORT_TX_BRP' ] = 'grp_3' 
+           ((X_train_quanti['BEST_APPORT_TX_BRP'] >1.8) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 6.81))
+            , 'g_BEST_APPORT_TX_BRP' ] = 'grp_3' 
 
     X_train_quanti.loc[ (X_train_quanti['BEST_APPORT_TX_BRP'] <= 1.8)  , 'g_BEST_APPORT_TX_BRP' ] = 'grp_4' 
 
-###########################t########################################
+    ###########################t########################################
 
     #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 82262.854) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 112500.0 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_1' 
 
-   # X_train_quanti.loc[ ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
-     #                  ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 112500) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
-     #                   , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
+    # X_train_quanti.loc[ ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
+    #                  ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 112500) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
+    #                   , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
 
 
     #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 298000) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 4600000 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_3' 
-    
-    
-############################################
+
+
+    ############################################
 
     X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] > 84400.25) &
-                       (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 193958.604), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_1'
+           (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 193958.604), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_1'
 
     X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] > 193958.604) &
-                       (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 252249632.0), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_2'
+           (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 252249632.0), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_2'
 
     X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] < 84400.25) , 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_3'
-    
-    
-    
 
-##############################################
+
+
+
+    ##############################################
     X_train_quanti.loc[ ((X_train_quanti['MNT_PRET_CRI'] > 79000.0 ) & (X_train_quanti['MNT_PRET_CRI'] <= 131632.269 )), 'g_MNT_PRET_CRI' ] = 'grp_1'
 
     X_train_quanti.loc[ ((X_train_quanti['MNT_PRET_CRI'] > 271978.55 ) & (X_train_quanti['MNT_PRET_CRI'] <= 4600000.0 )), 'g_MNT_PRET_CRI' ] = 'grp_3'
 
     X_train_quanti['g_MNT_PRET_CRI'] = X_train_quanti['g_MNT_PRET_CRI'].replace(np.nan , 'grp_2')
 
-##############################################
+    ##############################################
 
 
     X_train_quanti.loc[(X_train_quanti['AGE_INT_MAX_BRP'] <= 44) | (X_train_quanti['AGE_INT_MAX_BRP'] > 90 ), 'g_AGE_INT_MAX_BRP' ] = 'grp_1' 
