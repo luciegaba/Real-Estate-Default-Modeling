@@ -1,10 +1,9 @@
-
-
 import numpy as np
 from scipy.stats import chi2_contingency
 import pandas as pd
 
 # pour s'assurer du bon découpage des variable quanti 
+
 def group_by_et_value_counts(X, var) : 
     
     print('value counts de chaque groupe') 
@@ -16,84 +15,88 @@ def group_by_et_value_counts(X, var) :
 
 
 # fonction qui permet de discrétiser selon le critere du khi 2 ( crée des groupes qui doivement obligatoirement etre significatif )
-def khi_2_discretisation(df, var_a_discretiser:str, target:str, n_cut=8) :
+def khi_2_discretisation(df, var_a_discretiser:str, target, n_cut=8) :
 
     """ prend un data frame et retourne un data frame avec
     des buckets pour la variable quantitatives et les valeurs de la variable intiale dans chaque buckets
     affiche aussi des p_values du test du KHI-2 associé a chaque buckets
     """
 
-    raw_data = df[[ var_a_discretiser , target ]]
+    df_2 = df.copy()
+
+    y = target 
+    df_2['defaut_36mois'] = target 
+    raw_data = df_2[[ var_a_discretiser , 'defaut_36mois' ]]
 
     # création des cuts
     raw_data["intervalle_cut"] = pd.qcut(raw_data[var_a_discretiser], q = n_cut ,duplicates="drop")
     print('nb de cuts:',raw_data["intervalle_cut"].nunique())
 
     #groupement des cuts et moyenne de taux de defaut
-    df_a_grouper = raw_data.groupby("intervalle_cut")[target].agg(["mean"]).reset_index()
+    df_a_grouper = raw_data.groupby("intervalle_cut")['defaut_36mois'].agg(["mean"]).reset_index()
     print('cut regrouper avec taux de defaut moyen :')
     print()
     print(df_a_grouper.sort_values(by='mean'))
     print()
 
-    raw_data['intervalle_cut'] = raw_data['intervalle_cut'].astype('str')  # important
+    # raw_data['intervalle_cut'] = raw_data['intervalle_cut'].astype('str')  # important
 
-    ############################## création du dictionnaire
+    # ############################## création du dictionnaire
 
-    # creation de dict
-    dico = dict()
-    for inter, dx in zip( df_a_grouper["intervalle_cut"].astype(str) , df_a_grouper["mean"].round(2) ) :
-        dico[inter] = dx
+    # # creation de dict
+    # dico = dict()
+    # for inter, dx in zip( df_a_grouper["intervalle_cut"].astype(str) , df_a_grouper["mean"].round(2) ) :
+    #     dico[inter] = dx
 
-    liste_de_valeurs = list(dico.values())
+    # liste_de_valeurs = list(dico.values())
 
-    from pprint import pprint
-    dic = dict()
+    # from pprint import pprint
+    # dic = dict()
 
-    # création des clés qui seront le taux moyen de defaut de chaque cut
-    for c in set([ round(i,2) for i in liste_de_valeurs ]):
-        dic[c] = list()
+    # # création des clés qui seront le taux moyen de defaut de chaque cut
+    # for c in set([ round(i,2) for i in liste_de_valeurs ]):
+    #     dic[c] = list()
 
-    # inverser le dictionnaire
-    # création du couple clé valeurs : clé = tx moyen defaut , valeur : liste des intervalle
-    for k,v in dico.items() :
-        if round(v, 2) in dic :
-            dic[round(v,2)].append(k)
-        else :
-            pass
+    # # inverser le dictionnaire
+    # # création du couple clé valeurs : clé = tx moyen defaut , valeur : liste des intervalle
+    # for k,v in dico.items() :
+    #     if round(v, 2) in dic :
+    #         dic[round(v,2)].append(k)
+    #     else :
+    #         pass
 
-    print('dictionnaire intiale avec les différents taux de défaut :')
-    print()
-    pprint(dic)
-    print()
+    # print('dictionnaire intiale avec les différents taux de défaut :')
+    # print()
+    # pprint(dic)
+    # print()
 
-    # création des groupes dans la variables basé sur les tx moyen de defaut
-    for k, v in dic.items() :
-        for lst in v:
-            lst = str(lst)
-            raw_data.loc[raw_data['intervalle_cut'].isin([lst]) , f'groupe_{var_a_discretiser}'  ] = f'grp_{round(k*100)}'
+    # # création des groupes dans la variables basé sur les tx moyen de defaut
+    # for k, v in dic.items() :
+    #     for lst in v:
+    #         lst = str(lst)
+    #         raw_data.loc[raw_data['intervalle_cut'].isin([lst]) , f'groupe_{var_a_discretiser}'  ] = f'grp_{round(k*100)}'
 
-    print('moyenne par bucket crée :')
-    print()
-    pprint(raw_data.groupby(f'groupe_{var_a_discretiser}').mean()[target])
-    print()
+    # print('moyenne par bucket crée :')
+    # print()
+    # pprint(raw_data.groupby(f'groupe_{var_a_discretiser}').mean()[target])
+    # print()
 
-    ################################## test de la p-value
+    # ################################## test de la p-value
 
-    def khi_test(data, var1:str,var2:str)  :
+    # def khi_test(data, var1:str,var2:str)  :
 
-        CrossTabResult=pd.crosstab(index=data[var1], columns=data[var2])
-        ChiSqResult = chi2_contingency(CrossTabResult)
+    #     CrossTabResult=pd.crosstab(index=data[var1], columns=data[var2])
+    #     ChiSqResult = chi2_contingency(CrossTabResult)
 
-        if (ChiSqResult[1] < 0.05):
-            return (round(ChiSqResult[1],6))
-    # si non significative, elle retourne None
+    #     if (ChiSqResult[1] < 0.05):
+    #         return (round(ChiSqResult[1],6))
+    # # si non significative, elle retourne None
 
    
 
-    print('P-Value total : sur la variable du test =' , khi_test(raw_data, target, f'groupe_{var_a_discretiser}' ) )
-    print()
-    print('------------------- a toi de jouer maintenant et de regouper les buckets pertinentes ------------')
+    # print('P-Value total : sur la variable du test =' , khi_test(raw_data, target, f'groupe_{var_a_discretiser}' ) )
+    # print()
+    # print('------------------- a toi de jouer maintenant et de regouper les buckets pertinentes ------------')
 
     #return raw_data.drop_duplicates(subset=['intervalle_cut' ,f'groupe_{var_a_discretiser}'])
 
@@ -135,6 +138,18 @@ def discretisation_variables_from_chi2(X_train_quanti) :
 
 ###################################################################
 
+X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 67923.25 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 88544.561 )) |
+(X_train_quanti['SUM_RESS_REVENUS_BRP'] <= 28309.875)  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_1' 
+
+X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 42338.0 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 67923.25 ))  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_2' 
+
+X_train_quanti['g_SUM_RESS_REVENUS_BRP'] = X_train_quanti['g_SUM_RESS_REVENUS_BRP'] .replace(np.nan, 'grp_3')
+
+
+
+
+#####################################################################
+
 
     X_train_quanti.loc[ (X_train_quanti['SUM_PATR_IMMO_BRP'] > 160000.0) & (X_train_quanti['SUM_PATR_IMMO_BRP'] <= 250000.0), 'g_SUM_PATR_IMMO_BRP' ] = 'grp_1' 
 
@@ -167,6 +182,16 @@ def discretisation_variables_from_chi2(X_train_quanti) :
 
 
     X_train_quanti.loc[  (X_train_quanti['PCT_TEG_TAEG_CRI'] >= 3.29) , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_4'
+
+#######################################################################
+
+X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] < 4500 ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_1' 
+
+X_train_quanti.loc[ ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 4500)  & (X_train_quanti['COUT_NOTAIRE_BRP'] < 11200.0 ) )  |
+ ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 18500.0)  &  (X_train_quanti['COUT_NOTAIRE_BRP'] < 331240.0 ) ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_2' 
+
+
+X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] > 11200 ) & (X_train_quanti['COUT_NOTAIRE_BRP'] < 18500.0 )  , 'g_COUT_NOTAIRE_BRP' ] = 'grp_3' 
 
 ###########################t########################################
     X_train_quanti.loc[ ((X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5)) |
