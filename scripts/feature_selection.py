@@ -1,4 +1,3 @@
-
 import pandas as pd
 from scipy.stats import pointbiserialr
 import numpy as np
@@ -92,7 +91,6 @@ def selection_avec_lasso(X,y,n=20,var_to_fit="all") : # attention au fit_transfo
         X_quanti_normalise=pd.DataFrame(X_quanti_normalise, columns = X_quanti.columns)
         X_quali_encoded=pd.get_dummies(X_quali,prefix=X_quali.columns.tolist())
         X_to_fit=pd.concat([X_quanti_normalise.reset_index(drop=True),X_quali_encoded.reset_index(drop=True)],axis=1)
-        print(X_to_fit)
     
    
 

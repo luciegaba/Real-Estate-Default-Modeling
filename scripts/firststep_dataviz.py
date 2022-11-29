@@ -23,5 +23,3 @@ def stabilite_global_temps(data):
     plt.title("Stabilité de l'ensemble de l'échantillon sur la période d'étude (par année)")
     plt.xticks(rotation=80, size = 8)
     plt.figure(figsize=(14, 14))
-
-
