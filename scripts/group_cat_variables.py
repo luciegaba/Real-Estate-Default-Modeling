@@ -1,5 +1,6 @@
 import pandas as pd
 import optbinning
+import json
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -14,108 +15,6 @@ def liste_quali_a_regrouper(X):
         else:
             liste_sup_5_modalites.append(col)
     return liste_inf_5_modalites,liste_sup_5_modalites
-
-
-
-
-""" def replace_encoding_with_grouping(X_train):
-
-    COD_USAGE_BIEN_CRI={"10":"residence principale", 
-    "20": "residence secondaire", 
-    "30":"residence secondaire",
-    "40":"locatif",
-    "50":"locatif",
-    "60":"locatif"}
-
-
-
-    QUA_INT_MAX_BRP={"2":"monsieur",
-    "3":"madame",
-    "4":"mademoiselle",
-    "7":"entité",
-    "5":"entité",
-    "6":"entité"}	
-
-    COD_ETA_BIEN_CRI={"10":"neuf",
-    "20":"neuf",
-    "30":"neuf",
-    "40":"récent_inf_10_ans",
-    "60":"ancien_sup_10_ans",
-    "50":"ancien_sup_10_ans",
-    "70":"autres",
-    "110":"autres",
-    "120":"autres",
-    "130":"autres",
-    "140":"autres",
-    "150":"autres"}
-
-    CODTYP_CRT_TRAVAIL_CRI={"1":"cdi et professions libérales",
-    "2":"cdi et professions libérales",
-    "3":"cdd et intérim",
-    "4":"fonctionnaire ou agent public",
-    "5":"fonctionnaire ou agent public",
-    "6":"fonctionnaire ou agent public",
-    "7":"cdd et intérim","8":"chomage, retraités, inactifs",
-    "9":"chomage, retraités, inactifs",
-    "A":"fonctionnaire ou agent public",
-    "B":"fonctionnaire ou agent public",
-    "Y":"chomage, retraités, inactifs",
-    "Z":"cdi et professions libérales"}
-
-    CODTYPE_PROJET_CRI={"10":"appartement",
-    "20":"maison",
-    "30":"maison",
-    "70":"local mixte et professionnel",
-    "80":"local mixte et professionnel",
-    "90":"sci/scpi",
-    "100":"sci/scpi",
-    "130":"autres",
-    "140":"autres",
-    "50":"autres",
-    "60":"autres",
-    "40":"autres"}
-
-    COD_SITU_LOGT_CRI={"10.0":"propriétaire",
-    "20.0":"propriétaire",
-    "30.0":"locataire",
-    "40.0":"locataire",
-    "50.0":"locataire",
-    "60.0":"logement gratuit",
-    "70.0":"logement gratuit",
-    "nan":"autres",
-    "900.°":"autres"}
-
-    COD_SIT_FAM_EMPRUNTEUR_CRI={"1.0":"seul",
-    "4.0":"seul",
-    "6.0":"seul",
-    "5.0":"seul",
-    "2.0":"marié ou union",
-    "3.0":"marié ou union",
-    "nan":"seul"}
-    COD_TYPE_MARCHE_CRI={"M1":"M1",
-    "M21":"M2",
-    "M2":"M2"}
-    CSP_RGP_BRP={"1.0": "agriculteurs exploitants",
-    "2.0":"artisans, commerçants et chefs d'entreprise",
-    "3.0":"cadres et professions intellectuelles supérieures",
-    "4.0":"professions Intermédiaires",
-    "5.0":"employés",
-    "6.0":"ouvriers",
-    "7.0":"retraités",
-    "8.0":"autres personnes sans activité professionnelle",
-    "nan": "autres personnes sans activité professionnelle"}
-
-
-    X_train["COD_USAGE_BIEN_CRI"]=X_train["COD_USAGE_BIEN_CRI"].map(COD_USAGE_BIEN_CRI)
-    X_train["QUA_INT_MAX_BRP"]=X_train["QUA_INT_MAX_BRP"].map(QUA_INT_MAX_BRP)
-    X_train["COD_ETA_BIEN_CRI"]=X_train["COD_ETA_BIEN_CRI"].map(COD_ETA_BIEN_CRI)
-    X_train["CODTYP_CRT_TRAVAIL_CRI"]=X_train["CODTYP_CRT_TRAVAIL_CRI"].map(CODTYP_CRT_TRAVAIL_CRI)
-    X_train["CODTYPE_PROJET_CRI"]=X_train["CODTYPE_PROJET_CRI"].map(CODTYPE_PROJET_CRI)
-    X_train["COD_SITU_LOGT_CRI"]=X_train["COD_SITU_LOGT_CRI"].map(COD_SITU_LOGT_CRI)
-    X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"]=X_train["COD_SIT_FAM_EMPRUNTEUR_CRI"].map(COD_SIT_FAM_EMPRUNTEUR_CRI)
-    X_train["COD_TYPE_MARCHE_CRI"]=X_train["COD_TYPE_MARCHE_CRI"].map(COD_TYPE_MARCHE_CRI)
-    X_train["CSP_RGP_BRP"]=X_train["CSP_RGP_BRP"].map(CSP_RGP_BRP)
-    return X_train"""
 
 
 
@@ -215,6 +114,19 @@ def replace_encoding_by_real_mod(X):
     "nan":"autres",
     "900.°":"autres"}
 
+    COD_CPPOP_CRI={"10":"ACQUISITION_SEULE",
+    "20":"ACQUISITION_TRAVAUX",
+    "70":"RACHAT_DE_PRET",
+    "30":"TERRAIN_CONSTRUCTION",
+    "40":"CONSTRUCTION_SEULE",
+    "60":"TRAVAUX",
+    "50":"TRAVAUX_CONSTRUCTION",
+    "80":"PAIEMENT_SOULTE",
+    "90":"PAIEMENT_SOULTE_TRAVAUX",
+    "110":"RACHAT_DE_PRET",
+    "130":"RACHAT_DE_PRET"}
+
+
     COD_SIT_FAM_EMPRUNTEUR_CRI={"1.0":"célibataire",
     "4.0":"veuf",
     "6.0":"séparé",
@@ -244,6 +156,7 @@ def replace_encoding_by_real_mod(X):
     X["COD_SIT_FAM_EMPRUNTEUR_CRI"]=X["COD_SIT_FAM_EMPRUNTEUR_CRI"].map(COD_SIT_FAM_EMPRUNTEUR_CRI)
     X["COD_TYPE_MARCHE_CRI"]=X["COD_TYPE_MARCHE_CRI"].map(COD_TYPE_MARCHE_CRI)
     X["CSP_RGP_BRP"]=X["CSP_RGP_BRP"].map(CSP_RGP_BRP)
+    X["COD_CPPOP_CRI"]=X["COD_CPPOP_CRI"].map(COD_CPPOP_CRI)
     return X
 
 
@@ -272,7 +185,7 @@ def select_quali_variables(X_train_quali,y,seuil_diff_tx_moyen):
             quali_good.append(col)
     return quali_too_low_mod,quali_no_discriminant,quali_good
 
-def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,min_event_rate_diff=0.01,encoding=False):
+def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,min_event_rate_diff=0.01,encoding=False,display=True):
     le = LabelEncoder()
     dict_all = dict(zip([], []))
     if liste==None:
@@ -282,7 +195,8 @@ def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,m
             optb.fit(X_train[col],y_train)
             print("################################", col, "################################")
             print("STATUS :",optb.status)
-            display(optb.binning_table.build())
+            if display==True:
+                display(optb.binning_table.build())
             print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
 
             if encoding==True:
@@ -300,7 +214,8 @@ def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,m
             optb.fit(X_train[col],y_train)
             print("################################", col, "################################")
             print("STATUS :",optb.status)
-            display(optb.binning_table.build())
+            if display==True:
+                display(optb.binning_table.build())
             print(pd.Series(optb.transform(X_train[col],metric="bins")).value_counts())
             if encoding==True:
                 binned_var=optb.transform(X_train[col],metric="bins")
@@ -310,5 +225,18 @@ def group_modalities_with_optbinning(X_train,y_train,liste=None,cat_cutoff=0.1,m
                 temp_values = le.fit_transform(binned_var)
                 dict_temp = dict(zip(temp_keys, temp_values))
                 dict_all[col] = dict_temp
+    with open('doc/encoding_categorical_variables.json', 'w') as fp:
+        json.dump(dict_all, fp,  cls=NpEncoder)
+    return dict_all
 
-        return dict_all
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
