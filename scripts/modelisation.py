@@ -1,5 +1,6 @@
 
 import sklearn
+import pickle
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.metrics import confusion_matrix,roc_auc_score,roc_curve
 import matplotlib.pyplot as plt
@@ -41,12 +42,14 @@ def verif_nb_colonnes(x_train:pd.DataFrame,x_other:pd.DataFrame)-> pd.DataFrame 
 
 
 
-def fitting_model(model, x_train:pd.DataFrame, y_train:pd.Series) : 
+def fitting_model(model, x_train:pd.DataFrame, y_train:pd.Series,pickle_model=True) : 
     """ Retourne modèle fitté
     - x_train
     - y_train
     """
     model.fit(x_train , y_train)
+    if pickle_model==True;
+        pickle.dump(model, open('xgboost.pkl', 'wb'))
     return model
 
 
@@ -67,6 +70,7 @@ def gridsearchcv_for_model(model,x_train:pd.DataFrame,y_train:pd.Series,params:d
     - split_for_kflod:  Nombre de split pour KFold
 
     """"
+
     kfold = StratifiedKFold( split_for_kfold = split_for_kfold) 
     grid = GridSearchCV(model, params, cv=kfold ,scoring = scoring) 
     grid.fit(x_train , y_train)
