@@ -1,42 +1,229 @@
 import numpy as np
-from scipy.stats import chi2_contingency
 import pandas as pd
 
-# pour s'assurer du bon découpage des variable quanti 
 
-def group_by_et_value_counts(X, var) : 
+
+
+
+""" FONCTION DE DISCRETISATION """
+
+def discretisation_variables_from_chi2(X: pd.DataFrame) -> pd.DataFrame: 
+        
+    """ Cette fonction permet de discrétiser les variables selon les buckets trouvés initialement
+    retourne le dataframe avec les quantis discrétisées
+    Argument: 
+        - X
+
+     """  
+
+
+    #X.loc[ X['IRPAR_USAGE_V12_MAX'] <= 2, 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_1' 
+
+    #X.loc[(X['IRPAR_USAGE_V12_MAX'] > 2) & (X['IRPAR_USAGE_V12_MAX'] <= 4), 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_2'
+
+    #X.loc[  (X['IRPAR_USAGE_V12_MAX'] > 4) & (X['IRPAR_USAGE_V12_MAX'] <= 10), 'g_IRPAR_USAGE_V12_MAX' ] = 'grp_3'
+
     
-    print('value counts de chaque groupe') 
-    print(X[var].value_counts(normalize = True )*100)
+#################################################################
+
+    X.loc[ (X['MNT_TOT_ASSURANCE_CRI'] < 7683.976) , 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_1'
+
+    X.loc[  ((X['MNT_TOT_ASSURANCE_CRI'] > 7683.976) & 
+                          (X['MNT_TOT_ASSURANCE_CRI'] <=17283.191)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_2'
+
+    X.loc[  ((X['MNT_TOT_ASSURANCE_CRI'] > 17283.191) &
+                          (X['MNT_TOT_ASSURANCE_CRI'] <=246495.03)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_3'
+
+
+#################################################################
+
+    X.loc[(X['COUT_RACHAT_BRP'] >38969.08) & (X['COUT_RACHAT_BRP'] <= 183761.202), 'g_COUT_RACHAT_BRP' ] = 'grp_1'
+
+    X.loc[  ((X['COUT_RACHAT_BRP'] >183761.202) & (X['COUT_RACHAT_BRP'] <= 1826635.0)) 
+                       , 'g_COUT_RACHAT_BRP' ] = 'grp_2'
+
+    X.loc[  (X['COUT_RACHAT_BRP'] <= 38969.08)  , 'g_COUT_RACHAT_BRP' ] = 'grp_3'
+
+
+###################################################################
+
+
+    X.loc[ (X['SUM_PATR_IMMO_BRP'] > 160000.0) & (X['SUM_PATR_IMMO_BRP'] <= 250000.0), 'g_SUM_PATR_IMMO_BRP' ] = 'grp_1' 
+
+    X['g_SUM_PATR_IMMO_BRP'] = X['g_SUM_PATR_IMMO_BRP'].replace(np.nan, 'grp_2')
+
+###################################################################
+
+    X.loc[ ((X['quotite'] > 0.0282) & (X['quotite'] <=  0.802)) | 
+                       ((X['quotite'] > 1.019) & (X['quotite'] <= 1.043))
+                       , 'g_quotite' ] = 'grp_1'
+
+    X.loc[  ((X['quotite'] > 1) & (X['quotite'] <= 1.019)), 'g_quotite' ] = 'grp_2'
+
+    X.loc[  ((X['quotite'] > 0.802) & (X['quotite'] <= 0.966)) | 
+                       ((X['quotite'] > 1.043) & (X['quotite'] <= 12.006))
+                       , 'g_quotite' ] = 'grp_3'
+
+    X.loc[  ((X['quotite'] > 0.966) & (X['quotite'] <=1.0)), 'g_quotite' ] = 'grp_4'
+
+###################################################################
+    X.loc[(X['PCT_TEG_TAEG_CRI'] > 0.26 ) & (X['PCT_TEG_TAEG_CRI'] <=  2.077), 'g_PCT_TEG_TAEG_CRI' ] = 'grp_1'
+
+    X.loc[  ((X['PCT_TEG_TAEG_CRI'] > 2.077) & (X['PCT_TEG_TAEG_CRI'] <= 2.38)) | 
+                        ((X['PCT_TEG_TAEG_CRI'] > 2.624) & (X['PCT_TEG_TAEG_CRI'] <= 2.84))
+                       , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_2'
+
+    X.loc[  ((X['PCT_TEG_TAEG_CRI'] > 2.84) & (X['PCT_TEG_TAEG_CRI'] <= 3.29)) | 
+                        ((X['PCT_TEG_TAEG_CRI'] > 2.38) & (X['PCT_TEG_TAEG_CRI'] <= 2.624))
+                       , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_3'
+
+
+    X.loc[  (X['PCT_TEG_TAEG_CRI'] >= 3.29) , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_4'
+
+###########################t########################################
+    X.loc[ ((X['MOY_ANC_PROF_BRP'] > 5)  & ( X['MOY_ANC_PROF_BRP'] <= 11.5)) |
+                        (X['MOY_ANC_PROF_BRP'] > 5)  & ( X['MOY_ANC_PROF_BRP'] <= 11.5) | 
+                       (X['MOY_ANC_PROF_BRP'] > 16)  & ( X['MOY_ANC_PROF_BRP'] <= 49),
+                       'g_MOY_ANC_PROF_BRP' ] = 'grp_1' 
+
+    X.loc[ (X['MOY_ANC_PROF_BRP'] > 3.5 ) & (X['MOY_ANC_PROF_BRP'] <=  5 ) | 
+                       (X['MOY_ANC_PROF_BRP'] > 11.5 ) & (X['MOY_ANC_PROF_BRP'] <=  16 )
+                       , 'g_MOY_ANC_PROF_BRP' ] = 'grp_2' 
+
+    X.loc[ (X['MOY_ANC_PROF_BRP'] <= 3.5 )   , 'g_MOY_ANC_PROF_BRP' ] = 'grp_3'
+
+
+###########################t########################################
+    X.loc[ (X['nb_pret'] > 1) & (X['nb_pret'] <= 6), 'g_nb_pret' ] = 'grp_1' 
+
+    X.loc[(X['nb_pret'] <=1)  , 'g_nb_pret' ] = 'grp_2'
+
+
+###########################t########################################
+    X.loc[ (X['MNT_COUT_TOT_CREDIT_CRI'] <=36072.915 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_1' 
+
+    X.loc[ (X['MNT_COUT_TOT_CREDIT_CRI'] > 36072.915) &  (X['MNT_COUT_TOT_CREDIT_CRI'] <=59387.94 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_2' 
+
+    X.loc[ (X['MNT_COUT_TOT_CREDIT_CRI'] > 59387.94) &  (X['MNT_COUT_TOT_CREDIT_CRI'] <= 1968134.71) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_3' 
+
+
+###########################t########################################
+    X.loc[ (X['BEST_APPORT_TX_BRP'] > 29.74) & (X['BEST_APPORT_TX_BRP'] <=97.6 ) , 'g_BEST_APPORT_TX_BRP' ] = 'grp_1' 
+
+    X.loc[ ((X['BEST_APPORT_TX_BRP'] > 6.81) & (X['BEST_APPORT_TX_BRP'] <=13.15 )) |
+                       ((X['BEST_APPORT_TX_BRP'] > 16.07) & (X['BEST_APPORT_TX_BRP'] <= 29.74 ))
+                        , 'g_BEST_APPORT_TX_BRP' ] = 'grp_2' 
+
+    X.loc[ ((X['BEST_APPORT_TX_BRP'] > 13.15) & (X['BEST_APPORT_TX_BRP'] <=16.07 )) |
+                       ((X['BEST_APPORT_TX_BRP'] >1.8) & (X['BEST_APPORT_TX_BRP'] <= 6.81))
+                        , 'g_BEST_APPORT_TX_BRP' ] = 'grp_3' 
+
+    X.loc[ (X['BEST_APPORT_TX_BRP'] <= 1.8)  , 'g_BEST_APPORT_TX_BRP' ] = 'grp_4' 
+
+###########################t########################################
+    X.loc[ (X['COUT_PROJET_HF_AT_BRP'] > 82262.854) & (X['COUT_PROJET_HF_AT_BRP'] <= 112500.0 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_1' 
+
+    X.loc[ ((X['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
+                       ((X['COUT_PROJET_HF_AT_BRP'] > 112500) & (X['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
+                        , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
+
+
+    X.loc[ (X['COUT_PROJET_HF_AT_BRP'] > 298000) & (X['COUT_PROJET_HF_AT_BRP'] <= 4600000 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_3' 
     
-    print()
-    print('moyenne par bucket crée') 
-    print(X.groupby(var).mean()['defaut_36mois']*100)
+    
+    
+############################################
+
+    X.loc[(X['SUM_MTENCBIE_IMMO_BRP'] > 84400.25) &
+                       (X['SUM_MTENCBIE_IMMO_BRP'] <= 193958.604), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_1'
+
+    X.loc[(X['SUM_MTENCBIE_IMMO_BRP'] > 193958.604) &
+                       (X['SUM_MTENCBIE_IMMO_BRP'] <= 252249632.0), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_2'
+
+    X.loc[(X['SUM_MTENCBIE_IMMO_BRP'] < 84400.25) , 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_3'
+    
+    
+    
+
+##############################################
+    X.loc[ ((X['MNT_PRET_CRI'] > 79000.0 ) & (X['MNT_PRET_CRI'] <= 131632.269 )), 'g_MNT_PRET_CRI' ] = 'grp_1'
+
+    X.loc[ ((X['MNT_PRET_CRI'] > 271978.55 ) & (X['MNT_PRET_CRI'] <= 4600000.0 )), 'g_MNT_PRET_CRI' ] = 'grp_3'
+
+    X['g_MNT_PRET_CRI'] = X['g_MNT_PRET_CRI'].replace(np.nan , 'grp_2')
+
+##############################################
 
 
-# fonction qui permet de discrétiser selon le critere du khi 2 ( crée des groupes qui doivement obligatoirement etre significatif )
-def khi_2_discretisation(df, var_a_discretiser:str, target, n_cut=8) :
+    X.loc[(X['AGE_INT_MAX_BRP'] <= 44) | (X['AGE_INT_MAX_BRP'] > 90 ), 'g_AGE_INT_MAX_BRP' ] = 'grp_1' 
 
-    """ prend un data frame et retourne un data frame avec
-    des buckets pour la variable quantitatives et les valeurs de la variable intiale dans chaque buckets
-    affiche aussi des p_values du test du KHI-2 associé a chaque buckets
+    X.loc[(X['AGE_INT_MAX_BRP'] > 44) & (X['AGE_INT_MAX_BRP'] <= 90 ), 'g_AGE_INT_MAX_BRP' ] = 'grp_2' 
+
+
+
+
+    return X
+
+
+
+
+def check_mean_defaut_rate_per_category(X_train:pd.DataFrame,y:pd.Series,type="quanti")-> None:
+    
+    """ Cette fonction permet d'afficher le taux moyen de defaut pour chaque variable ( pour vérifier si les modalités crées sont pertinentes 
+    Argument: 
+        -X_train
+        -y
+        -type: quanti ou quali
+
     """
+    
+    columns_to_check = []
+    columns = X_train.columns.tolist() 
+    if type == "quanti":
+        for col in columns :  # on prend que les variables qui commencent par g_ car c'est les variables discrétiser 
+            if 'g_' in col : 
+                columns_to_check.append(col) 
+    else: 
+        columns_to_check=columns
+    for var in columns_to_check : 
+        defaut = pd.crosstab(X_train[var],y)[1]
+        print(f'------ pour la variable {var} : ' )
+        print()
+        display(defaut)
+        print()
+        
 
-    df_2 = df.copy()
 
-    y = target 
-    df_2['defaut_36mois'] = target 
-    raw_data = df_2[[ var_a_discretiser , 'defaut_36mois' ]]
+
+
+""" FONCTION INITIALEMENT UTILISE POUR CREER LES BUCKETS"""
+
+
+""""
+def Chi_2_discretisation(X:pd.DataFrame,y:pd.Series, var_to_bin:str, n_cut=8) :
+
+    Fonction qui permet de discrétiser selon le critere du Chi 2 (elle créée des groupes qui doivent obligatoirement être significatif )
+    retourne le dataframe avec buckets pour les variables quantitatives préalablement sélectionnées, ainsi que les valeurs de la variable initiale dans chaque bucket 
+    / Elle affiche aussi les taux de défaut moyen par bucket
+    Argument:
+        -X
+        -y
+        -var_to_bin
+
+
+    df= X.copy()
+    df['defaut_36mois'] = y 
+    raw_data = df[[ var_to_bin , 'defaut_36mois' ]]
 
     # création des cuts
-    raw_data["intervalle_cut"] = pd.qcut(raw_data[var_a_discretiser], q = n_cut ,duplicates="drop")
+    raw_data["intervalle_cut"] = pd.qcut(raw_data[var_to_bin], q = n_cut ,duplicates="drop")
     print('nb de cuts:',raw_data["intervalle_cut"].nunique())
 
     #groupement des cuts et moyenne de taux de defaut
-    df_a_grouper = raw_data.groupby("intervalle_cut")['defaut_36mois'].agg(["mean"]).reset_index()
+    df_to_group = raw_data.groupby("intervalle_cut")['defaut_36mois'].agg(["mean"]).reset_index()
     print('cut regrouper avec taux de defaut moyen :')
     print()
-    print(df_a_grouper.sort_values(by='mean'))
+    print(df_to_group.sort_values(by='mean'))
     print()
 
     # raw_data['intervalle_cut'] = raw_data['intervalle_cut'].astype('str')  # important
@@ -78,7 +265,7 @@ def khi_2_discretisation(df, var_a_discretiser:str, target, n_cut=8) :
 
     # print('moyenne par bucket crée :')
     # print()
-    # pprint(raw_data.groupby(f'groupe_{var_a_discretiser}').mean()[target])
+    # print(raw_data.groupby(f'groupe_{var_a_discretiser}').mean()[target])
     # print()
 
     # ################################## test de la p-value
@@ -102,216 +289,14 @@ def khi_2_discretisation(df, var_a_discretiser:str, target, n_cut=8) :
 
 
 
-
-
-
-
-# fonction qui execute la discrétisation choisit grace a la fonction khi 2 
-
-
-
-
-def discretisation_variables_from_chi2(X_train_quanti) : 
-        
-    """ cette fonction permet de discrétiser les variables """  
-
-#################################################################
-
-    X_train_quanti.loc[ (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] < 7683.976) , 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_1'
-
-    X_train_quanti.loc[  ((X_train_quanti['MNT_TOT_ASSURANCE_CRI'] > 7683.976) & 
-              (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=17283.191)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_2'
-
-    X_train_quanti.loc[  ((X_train_quanti['MNT_TOT_ASSURANCE_CRI'] > 17283.191) &
-              (X_train_quanti['MNT_TOT_ASSURANCE_CRI'] <=246495.03)), 'g_MNT_TOT_ASSURANCE_CRI' ] = 'grp_3'
-
-
-    #################################################################
-
-    X_train_quanti.loc[(X_train_quanti['COUT_RACHAT_BRP'] >38969.08) & (X_train_quanti['COUT_RACHAT_BRP'] <= 183761.202), 'g_COUT_RACHAT_BRP' ] = 'grp_1'
-
-    X_train_quanti.loc[  ((X_train_quanti['COUT_RACHAT_BRP'] >183761.202) & (X_train_quanti['COUT_RACHAT_BRP'] <= 1826635.0)) 
-           , 'g_COUT_RACHAT_BRP' ] = 'grp_2'
-
-    X_train_quanti.loc[  (X_train_quanti['COUT_RACHAT_BRP'] <= 38969.08)  , 'g_COUT_RACHAT_BRP' ] = 'grp_3'
-
-
-    ###################################################################
-
-    X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 67923.25 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 88544.561 )) |
-    (X_train_quanti['SUM_RESS_REVENUS_BRP'] <= 28309.875)  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_1' 
-
-    X_train_quanti.loc[ ((X_train_quanti['SUM_RESS_REVENUS_BRP'] > 42338.0 ) & (X_train_quanti['SUM_RESS_REVENUS_BRP'] < 67923.25 ))  , 'g_SUM_RESS_REVENUS_BRP' ] = 'grp_2' 
-
-    X_train_quanti['g_SUM_RESS_REVENUS_BRP'] = X_train_quanti['g_SUM_RESS_REVENUS_BRP'] .replace(np.nan, 'grp_3')
-
-
-
-
-    #####################################################################
-
-
-    X_train_quanti.loc[ (X_train_quanti['SUM_PATR_IMMO_BRP'] > 160000.0) & (X_train_quanti['SUM_PATR_IMMO_BRP'] <= 250000.0), 'g_SUM_PATR_IMMO_BRP' ] = 'grp_1' 
-
-    X_train_quanti['g_SUM_PATR_IMMO_BRP'] = X_train_quanti['g_SUM_PATR_IMMO_BRP'].replace(np.nan, 'grp_2')
-
-    ###################################################################
-
-    X_train_quanti.loc[ ((X_train_quanti['quotite'] > 0.0282) & (X_train_quanti['quotite'] <=  0.802)) | 
-           ((X_train_quanti['quotite'] > 1.019) & (X_train_quanti['quotite'] <= 1.043))
-           , 'g_quotite' ] = 'grp_1'
-
-    X_train_quanti.loc[  ((X_train_quanti['quotite'] > 1) & (X_train_quanti['quotite'] <= 1.019)), 'g_quotite' ] = 'grp_2'
-
-    X_train_quanti.loc[  ((X_train_quanti['quotite'] > 0.802) & (X_train_quanti['quotite'] <= 0.966)) | 
-           ((X_train_quanti['quotite'] > 1.043) & (X_train_quanti['quotite'] <= 12.006))
-           , 'g_quotite' ] = 'grp_3'
-
-    X_train_quanti.loc[  ((X_train_quanti['quotite'] > 0.966) & (X_train_quanti['quotite'] <=1.0)), 'g_quotite' ] = 'grp_4'
-
-    ###################################################################
-    X_train_quanti.loc[(X_train_quanti['PCT_TEG_TAEG_CRI'] > 0.26 ) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <=  2.077), 'g_PCT_TEG_TAEG_CRI' ] = 'grp_1'
-
-    X_train_quanti.loc[  ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.077) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.38)) | 
-            ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.624) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.84))
-           , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_2'
-
-    X_train_quanti.loc[  ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.84) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 3.29)) | 
-            ((X_train_quanti['PCT_TEG_TAEG_CRI'] > 2.38) & (X_train_quanti['PCT_TEG_TAEG_CRI'] <= 2.624))
-           , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_3'
-
-
-    X_train_quanti.loc[  (X_train_quanti['PCT_TEG_TAEG_CRI'] >= 3.29) , 'g_PCT_TEG_TAEG_CRI' ] = 'grp_4'
-
-    #######################################################################
-
-    X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] < 4500 ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_1' 
-
-    X_train_quanti.loc[ ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 4500)  & (X_train_quanti['COUT_NOTAIRE_BRP'] < 11200.0 ) )  |
-    ((X_train_quanti['COUT_NOTAIRE_BRP'] >= 18500.0)  &  (X_train_quanti['COUT_NOTAIRE_BRP'] < 331240.0 ) ) , 'g_COUT_NOTAIRE_BRP' ] = 'grp_2' 
-
-
-    X_train_quanti.loc[ (X_train_quanti['COUT_NOTAIRE_BRP'] > 11200 ) & (X_train_quanti['COUT_NOTAIRE_BRP'] < 18500.0 )  , 'g_COUT_NOTAIRE_BRP' ] = 'grp_3' 
-
-    ###########################t########################################
-    X_train_quanti.loc[ ((X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5)) |
-            (X_train_quanti['MOY_ANC_PROF_BRP'] > 5)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 11.5) | 
-           (X_train_quanti['MOY_ANC_PROF_BRP'] > 16)  & ( X_train_quanti['MOY_ANC_PROF_BRP'] <= 49),
-           'g_MOY_ANC_PROF_BRP' ] = 'grp_1' 
-
-    X_train_quanti.loc[ (X_train_quanti['MOY_ANC_PROF_BRP'] > 3.5 ) & (X_train_quanti['MOY_ANC_PROF_BRP'] <=  5 ) | 
-           (X_train_quanti['MOY_ANC_PROF_BRP'] > 11.5 ) & (X_train_quanti['MOY_ANC_PROF_BRP'] <=  16 )
-           , 'g_MOY_ANC_PROF_BRP' ] = 'grp_2' 
-
-    X_train_quanti.loc[ (X_train_quanti['MOY_ANC_PROF_BRP'] <= 3.5 )   , 'g_MOY_ANC_PROF_BRP' ] = 'grp_3'
-
-
-    ###########################t########################################
-    X_train_quanti.loc[ (X_train_quanti['nb_pret'] > 1) & (X_train_quanti['nb_pret'] <= 6), 'g_nb_pret' ] = 'grp_1' 
-
-    X_train_quanti.loc[(X_train_quanti['nb_pret'] <=1)  , 'g_nb_pret' ] = 'grp_2'
-
-
-    ###########################t########################################
-    X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <=36072.915 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_1' 
-
-    X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] > 36072.915) &  (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <=59387.94 ) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_2' 
-
-    X_train_quanti.loc[ (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] > 59387.94) &  (X_train_quanti['MNT_COUT_TOT_CREDIT_CRI'] <= 1968134.71) , 'g_MNT_COUT_TOT_CREDIT_CRI' ] = 'grp_3' 
-
-
-    ###########################t########################################
-    X_train_quanti.loc[ (X_train_quanti['BEST_APPORT_TX_BRP'] > 29.74) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=97.6 ) , 'g_BEST_APPORT_TX_BRP' ] = 'grp_1' 
-
-    X_train_quanti.loc[ ((X_train_quanti['BEST_APPORT_TX_BRP'] > 6.81) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=13.15 )) |
-           ((X_train_quanti['BEST_APPORT_TX_BRP'] > 16.07) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 29.74 ))
-            , 'g_BEST_APPORT_TX_BRP' ] = 'grp_2' 
-
-    X_train_quanti.loc[ ((X_train_quanti['BEST_APPORT_TX_BRP'] > 13.15) & (X_train_quanti['BEST_APPORT_TX_BRP'] <=16.07 )) |
-           ((X_train_quanti['BEST_APPORT_TX_BRP'] >1.8) & (X_train_quanti['BEST_APPORT_TX_BRP'] <= 6.81))
-            , 'g_BEST_APPORT_TX_BRP' ] = 'grp_3' 
-
-    X_train_quanti.loc[ (X_train_quanti['BEST_APPORT_TX_BRP'] <= 1.8)  , 'g_BEST_APPORT_TX_BRP' ] = 'grp_4' 
-
-    ###########################t########################################
-
-    #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 82262.854) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 112500.0 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_1' 
-
-    # X_train_quanti.loc[ ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 844.999) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 82262.854 )) | 
-    #                  ((X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 112500) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <=298000 )) 
-    #                   , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_2' 
-
-
-    #X_train_quanti.loc[ (X_train_quanti['COUT_PROJET_HF_AT_BRP'] > 298000) & (X_train_quanti['COUT_PROJET_HF_AT_BRP'] <= 4600000 ) , 'g_COUT_PROJET_HF_AT_BRP' ] = 'grp_3' 
-
-
-    ############################################
-
-    X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] > 84400.25) &
-           (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 193958.604), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_1'
-
-    X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] > 193958.604) &
-           (X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] <= 252249632.0), 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_2'
-
-    X_train_quanti.loc[(X_train_quanti['SUM_MTENCBIE_IMMO_BRP'] < 84400.25) , 'g_SUM_MTENCBIE_IMMO_BRP' ] = 'grp_3'
-
-
-
-
-    ##############################################
-    X_train_quanti.loc[ ((X_train_quanti['MNT_PRET_CRI'] > 79000.0 ) & (X_train_quanti['MNT_PRET_CRI'] <= 131632.269 )), 'g_MNT_PRET_CRI' ] = 'grp_1'
-
-    X_train_quanti.loc[ ((X_train_quanti['MNT_PRET_CRI'] > 271978.55 ) & (X_train_quanti['MNT_PRET_CRI'] <= 4600000.0 )), 'g_MNT_PRET_CRI' ] = 'grp_3'
-
-    X_train_quanti['g_MNT_PRET_CRI'] = X_train_quanti['g_MNT_PRET_CRI'].replace(np.nan , 'grp_2')
-
-    ##############################################
-
-
-    X_train_quanti.loc[(X_train_quanti['AGE_INT_MAX_BRP'] <= 44) | (X_train_quanti['AGE_INT_MAX_BRP'] > 90 ), 'g_AGE_INT_MAX_BRP' ] = 'grp_1' 
-
-    X_train_quanti.loc[(X_train_quanti['AGE_INT_MAX_BRP'] > 44) & (X_train_quanti['AGE_INT_MAX_BRP'] <= 90 ), 'g_AGE_INT_MAX_BRP' ] = 'grp_2' 
-
-
-
-
-    return X_train_quanti
-
-
-
-# verification par group by 
-
-def verification_par_moyenne_defaut(x,y,type="quanti"):
+def group_by_value_counts(X_train:pd.DataFrame, var:str) -> None : 
     
-    """ cette fonction permet d'afficher le taux moyen de defaut pour chaque var ( verifier si les modalités crées sont pertinentes"""
-    
-    colonnes_a_verifier = []
-    colonnes = x.columns.tolist() 
-    x=pd.concat([x.reset_index(),y.reset_index()],axis=1)
-    if type == "quanti":
-        for col in colonnes :  # on prend que les variables qui commencent par g_ car c'est les variables discrétiser 
-            if 'g_' in col : 
-                colonnes_a_verifier.append(col) 
-    else: 
-        colonnes_a_verifier=colonnes
-    for var in colonnes_a_verifier : 
-        defaut = x.groupby(var).mean()['defaut_36mois']
-        print(f'------ pour la variable {var} : ' )
-        print()
-        print(defaut) 
-        print()
-        
+    print('Effectif de chaque groupe') 
+    print(X_train[var].value_counts(normalize = True )*100)
+    print()
+    print('Moyenne par bucket créé') 
+    print(X_train.groupby(var).mean()['defaut_36mois']*100)
 
-# recuperer seulemnt les variables discrétiser et supprimer les variables quanti de bases 
-def get_binned_df(X) : 
-    
-    col_a_garder = []
-    
-    for col in X.columns.tolist() : 
-        if 'g_' in col : 
-            col_a_garder.append(col)
-            
-    
-    X_quanti_final = X[col_a_garder]
-    
-    return X_quanti_final
+"""
+
+

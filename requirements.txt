@@ -12,5 +12,5 @@ Cmake
 qdldl
 jinja2
 json
-
+bokeh
 

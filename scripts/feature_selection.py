@@ -1,15 +1,47 @@
 
-import pandas as pd
-from scipy.stats import pointbiserialr
 import numpy as np
 import pandas as pd
 import scipy.stats as ss
+from scipy.stats import pointbiserialr,kruskal
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
+from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-def test_pointbiserial_all_quanti_variables(X,y):
-    var_quanti=X.select_dtypes(exclude="object")
-    var, corr, pval = [], [], []
+
+
+"""    TESTS UNIVARIES VARIABLES QUANTITATIVES    """
+
+
+def test_kruskall_wallis(X_train: pd.DataFrame,y: pd.Series) -> pd.DataFrame :
+
+    """ retourne un DataFrame avec les statistiques du test Kruskall Wallis et les pvalues associées
+
+    Argument: 
+    - X_train: X_train comportant les variables quantitatives 
+    - y: y_train
+
+    """    
+    var_quanti=X_train.select_dtypes(exclude="object")
+    df_point_bis = pd.DataFrame(columns=['variable', 'corr', 'pvalue'])    
+    for i in var_quanti :
+        pbc = kruskal(y, var_quanti[i])
+        df_point_bis.loc[len(df_point_bis)] = i, round(pbc.statistic, 3) , round(pbc.pvalue, 3)
+    return df_point_bis
+
+
+
+def test_biserial(X_train: pd.DataFrame,y: pd.Series) -> pd.DataFrame :
+
+    """ retourne un DataFrame avec les coefficients du test biserial et les pvalues
+    Argument: 
+    - X_train: X_train comportant les variables quantitatives 
+    - y: y_train
+
+    """    
+    var_quanti=X_train.select_dtypes(exclude="object")
     df_point_bis = pd.DataFrame(columns=['variable', 'corr', 'pvalue'])    
     for i in var_quanti :
         pbc = pointbiserialr(y, var_quanti[i])
@@ -17,31 +49,69 @@ def test_pointbiserial_all_quanti_variables(X,y):
     return df_point_bis
 
 
+"""    TESTS UNIVARIES VARIABLES QUALITATIVES    """
 
-def test_chi2_all_quali_variables(X,y):
+
+def test_chi2_independance(X_train: pd.DataFrame,y: pd.Series) -> pd.DataFrame:
+
+    """ retourne un DataFrame avec les coefficients du Chi2 et les p values associées
+    Argument: 
+    - X_train: X_train comportant les variables qualitatives préselectionnées avec le test du Chi2 
+    - y: y_train
+
+    """
+    
     var, corr, pval = [], [], []
     df_chi2 = pd.DataFrame(columns = ['variable', 'Chi2', 'pvalue'])
-    for variable in X.select_dtypes(include="object").columns.tolist():
-        crosstab = pd.crosstab(X[variable], y)
+    for variable in X_train.select_dtypes(include="object").columns.tolist():
+        crosstab = pd.crosstab(X_train[variable], y)
         chi2, pval, dof, expected = ss.chi2_contingency(crosstab)
         df_chi2.loc[len(df_chi2)] = variable, chi2, round(pval, 3)
     return df_chi2
 
-
-def non_significativité_chi2(X,y):
-    
-    results_chi2=test_chi2_all_quali_variables(X,y)
-    colonnes_non_significatives = results_chi2["variable"][results_chi2["pvalue"]<0.05].tolist()
-    print("VARIABLES QUALITATIVES NON SIGNIFICATIVES AU SEUIL DE 5%")
-    print(colonnes_non_significatives)
-    return colonnes_non_significatives
     
 
-def cramers_v(contingency_table):
-    if contingency_table.shape[0]==2:
-        correct=False
-    else:
-        correct=True
+def cramers_v_btw_X(X_train:pd.DataFrame) -> pd.DataFrame:
+
+    """ retourne un DataFrame avec les coefficients du V de Cramer entre variables qualitatives
+    Argument: 
+    - X_train: X_train comportant les variables qualitatives préselectionnées avec le test du Chi2 r 
+
+    """
+    
+    categorical_columns = list(X_train.select_dtypes('object').columns)
+    categorical_correlation_df = pd.DataFrame(index = categorical_columns, columns = categorical_columns)
+    for i in categorical_columns:
+        for j in categorical_columns:
+            contingency_table = pd.crosstab(X_train[i], X_train[j])
+            if contingency_table.size != 0:               
+                categorical_correlation_df.loc[i, j] = cramers_v(contingency_table)
+    return categorical_correlation_df
+
+
+
+def cramers_v_with_target(X_train:pd.DataFrame,y:pd.Series) -> pd.DataFrame:
+
+    """ retourne un DataFrame avec les coefficients du V de Cramer
+    Argument: 
+    - X_train: X_train comportant les variables qualitatives préselectionnées avec le test du Chi2 
+    - y: y_train
+
+    """
+
+    categorical_columns = list(X_train.select_dtypes('object').columns)
+    categorical_correlations = pd.DataFrame(columns=["Variable","coefficient"])
+    for i in categorical_columns:
+        contingency_table = pd.crosstab(X_train[i], y)
+        if contingency_table.size != 0:  
+            value=   cramers_v(contingency_table)   
+            categorical_correlations.loc[len(categorical_correlations)] = i, value
+    return categorical_correlations
+
+
+
+def cramers_v(contingency_table: pd.DataFrame):
+    
     chi2 = ss.chi2_contingency(contingency_table)[0]
     n = contingency_table.sum().sum()
     phi2_coff = chi2/n
@@ -51,30 +121,24 @@ def cramers_v(contingency_table):
     c_corr = c - (((c-1)**2)/(n-1))
     return np.sqrt(unbiased_phi2_coff / min((c_corr-1), (r_corr-1)))
 
-def cramers_v_all_cat_var(X):
-    categorical_columns = list(X.select_dtypes('object').columns)
-    categorical_correlation_df = pd.DataFrame(index = categorical_columns, columns = categorical_columns)
-    for i in categorical_columns:
-        for j in categorical_columns:
-            contingency_table = pd.crosstab(X[i], X[j])
-            if contingency_table.size != 0:                 #to avoid this statement deal with the missing values first
-                categorical_correlation_df.loc[i, j] = cramers_v(contingency_table)
-    return categorical_correlation_df
-
-# verification de la corrélation entre les variables 
-# recuperation des variables quantitatives pertinentes avec un lasso
 
 
+"""    REGRESSION LASSO    """
 
-def selection_avec_lasso(X,y,n=20,var_to_fit="all") : # attention au fit_transform lors de l'utilisation de X_test et base_HT
+
+def selection_avec_lasso(X_train:pd.DataFrame,y:pd.Series,n=20,var_to_fit="all") -> list : # attention au fit_transform lors de l'utilisation de X_test et base_HT
     
     """ retourne une liste des variables les plus importantes
     Argument : 
         - X : X_train initial 
+        - y: y_train
+        - n: Nombre de variables à sélectionner
+        - var_to_fit: "num", "quali", "all"
+
     """ 
-    # selection X_train et y 
-    X_quanti = X.select_dtypes(exclude='object')
-    X_quali=X.select_dtypes(include='object')
+
+    X_quanti = X_train.select_dtypes(exclude='object')
+    X_quali=X_train.select_dtypes(include='object')
 
     if var_to_fit=='num':
         sc = StandardScaler()
@@ -95,7 +159,6 @@ def selection_avec_lasso(X,y,n=20,var_to_fit="all") : # attention au fit_transfo
     
    
 
-    # model lasso
     lr =  LogisticRegression(penalty = 'l1', class_weight= 'balanced', solver = 'saga' ,random_state = 42, C =0.01)
     lr.fit(X_to_fit, y)
     
@@ -109,3 +172,39 @@ def selection_avec_lasso(X,y,n=20,var_to_fit="all") : # attention au fit_transfo
     var_selection = coef_apres_lasso.sort_values(ascending=False, by='coef')[:n].index.tolist()
     
     return  var_selection
+
+
+
+
+""" SELECTION DES VARIABLES FINALES: RANDOM FOREST """
+
+
+
+def get_feature_selection_rf(X_train:pd.DataFrame,y:pd.Series):
+
+    """ retourne un graphique de feature importance du rf
+    Argument: 
+    - X: X_train comportant les variables qualitatives préselectionnées avec le test du Chi2 
+    - y: y_train
+
+    """
+    X_train_discretise = pd.get_dummies( X_train, drop_first = False) 
+    x_train, x_test, y_train, y_test = train_test_split(X_train_discretise ,y, stratify = y) 
+
+    param_rf = { 
+                'n_estimators' : [400] , 
+                'max_depth' : [ 3, 5 ] , 
+                'min_samples_leaf' : [ 100] ,
+                'class_weight' : ['balanced'] }
+
+    kfold = StratifiedKFold( n_splits = 3 ) 
+
+    rf = RandomForestClassifier()
+    model = GridSearchCV(rf, param_rf, cv=kfold ,scoring = 'recall') 
+    model.fit(x_train , y_train)
+
+    print(model.best_params_)
+    plt.figure(figsize = (11,11))
+    importances_rf = pd.DataFrame( model.best_estimator_.feature_importances_.T, index = x_train.columns, columns = ['importance'] ).reset_index()
+    sns.barplot(importances_rf, x='importance' , y= 'index')
+
