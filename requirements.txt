@@ -15,5 +15,5 @@ jinja2
 bokeh
 sklearn
 xgboost
-
+plotly
 
