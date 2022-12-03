@@ -1,5 +1,6 @@
 scipy
 scikit-learn
+jupyter
 pandas
 numpy
 matplotlib
@@ -11,6 +12,8 @@ openpyxl
 Cmake
 qdldl
 jinja2
-json
 bokeh
+sklearn
+xgboost
+
 
