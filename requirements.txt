@@ -1,0 +1,16 @@
+scipy
+scikit-learn
+pandas
+numpy
+matplotlib
+seaborn
+Cmake
+qdldl
+optbinning
+openpyxl
+Cmake
+qdldl
+jinja2
+json
+bokeh
+
