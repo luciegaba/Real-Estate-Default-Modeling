@@ -45,7 +45,7 @@ conda create -n"[nom de l'environnemnt, exemple: LCL]
 conda activate [nom de l'environnement]
 conda install python 
 conda install pip
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 Ensuite, vous pouvez aisément accéder au(x) notebook(s)
