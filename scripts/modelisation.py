@@ -48,7 +48,7 @@ def fitting_model(model, x_train:pd.DataFrame, y_train:pd.Series,pickle_model=Tr
     - y_train
     """
     model.fit(x_train , y_train)
-    if pickle_model==True;
+    if pickle_model==True:
         pickle.dump(model, open('xgboost.pkl', 'wb'))
     return model
 
@@ -59,7 +59,8 @@ def fitting_model(model, x_train:pd.DataFrame, y_train:pd.Series,pickle_model=Tr
 
 
 def gridsearchcv_for_model(model,x_train:pd.DataFrame,y_train:pd.Series,params:dict,train_mod_with_best_params=False,scoring='recall',split_for_kfold=4):
-    """"
+    
+    """
     Retourne les paramètres optimaux ou le modèle directement entraîné avec si souhaité 
     - model
     - x_train
@@ -67,13 +68,12 @@ def gridsearchcv_for_model(model,x_train:pd.DataFrame,y_train:pd.Series,params:d
     - params :grid
     - train_mod_with_best_params: True ==> on traine le modèle direct avec les paramètres optimaux de la gridsearchcv
     - scoring: métrique à retenir (par défaut recall)
-    - split_for_kflod:  Nombre de split pour KFold
+    - split_for_kflod:  Nombre de split pour KFold """
 
-    """"
-
-    kfold = StratifiedKFold( split_for_kfold = split_for_kfold) 
+    kfold = StratifiedKFold(n_splits  = split_for_kfold) 
     grid = GridSearchCV(model, params, cv=kfold ,scoring = scoring) 
     grid.fit(x_train , y_train)
+    
     if train_mod_with_best_params==True:
         return grid,grid.best_params_
     else:
@@ -85,7 +85,7 @@ def gridsearchcv_for_model(model,x_train:pd.DataFrame,y_train:pd.Series,params:d
 
 
 def evaluation(model,x_train:pd.DataFrame,x_test:pd.DataFrame,y_train:pd.DataFrame,y_test:pd.DataFrame)-> None:
-    """"
+    """
     Retourne un ensemble de métriques et graphiques pour évaluer la performance du modèle
     Arguments: 
     - model
@@ -94,7 +94,7 @@ def evaluation(model,x_train:pd.DataFrame,x_test:pd.DataFrame,y_train:pd.DataFra
     - y_train
     - y_test
 
-    """"
+    """
 
     y_train_pred=model.predict_proba(x_train)
     y_train_pred = pd.DataFrame(y_train_pred).iloc[: , 1]
@@ -127,7 +127,6 @@ def evaluation(model,x_train:pd.DataFrame,x_test:pd.DataFrame,y_train:pd.DataFra
 
 def get_coeff_for_model(logistic_model, x_train:pd.DataFrame)-> pd.DataFrame:
         """
-        
         """
         coeff = pd.DataFrame( abs(logistic_model.coef_.T), index = x_train.columns, columns = ['coef']).reset_index()
         coeff = coeff.sort_values(by = 'index') 
