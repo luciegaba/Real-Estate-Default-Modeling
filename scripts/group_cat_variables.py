@@ -5,6 +5,12 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
 
+
+
+
+
+    
+
 def selection_categorical_var_post_grouping(X_train:pd.DataFrame,y:pd.Series,seuil_diff_tx_moyen:np.float) -> list:
     """ retourne la liste des variables qui ne sont pas discriminantes post-regroupement (pas assez de modalités ou taux de différence entre modalité pas suffisant)
     Argument: 
@@ -129,6 +135,9 @@ def replace_by_mod_if_not_encoded(x,dict_encoding_values,mod):
     else:
         x=x
     return x
+
+
+
 
 
 

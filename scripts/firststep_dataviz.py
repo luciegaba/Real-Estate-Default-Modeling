@@ -2,6 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.express as px
 
 
 """ EXPLORATORY DATAVIZ """
@@ -20,6 +21,9 @@ def missing_rate_report(X_train:pd.DataFrame) -> pd.DataFrame:
     display(missing_rate)
     return missing_rate
 
+
+
+
 def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
 
     sns.histplot(raw_data["date_debloc_avec_crd"].astype(str).str[:7])
@@ -32,6 +36,8 @@ def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
     plt.title("Stabilité de l'ensemble de l'échantillon sur la période d'étude (par année)")
     plt.xticks(rotation=80, size = 8)
     plt.figure(figsize=(14, 14))
+
+
 
 
 

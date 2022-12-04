@@ -206,5 +206,7 @@ def get_feature_selection_rf(X_train:pd.DataFrame,y:pd.Series):
     print(model.best_params_)
     plt.figure(figsize = (11,11))
     importances_rf = pd.DataFrame( model.best_estimator_.feature_importances_.T, index = x_train.columns, columns = ['importance'] ).reset_index()
-    sns.barplot(importances_rf, x='importance' , y= 'index')
+    fig=sns.barplot(importances_rf, x='importance' , y= 'index')
+    plt.show()
+    return fig
 

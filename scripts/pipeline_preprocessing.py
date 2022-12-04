@@ -62,6 +62,8 @@ def pipeline_processing(X: pd.DataFrame,y:pd.Series,quanti_selected:list, quali_
     encoding_categorical_variables(X,dict_encoding,quali_selected)
     print("DONE")
 
+    
+
     """  DISCRETISATION VARIABLES QUANTITATIVES """
 
     print("Warning : Binning continuous variables ...")
