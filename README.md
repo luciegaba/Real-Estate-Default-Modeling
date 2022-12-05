@@ -61,7 +61,7 @@ Ce dossier est composé de plusieurs élements:
 - data: 
     - external: données de bases externes comme variables auxiliaires et longitude/latitude
     - output: données créées au sein du projet
-    - Base_recents.xlsx
+    - Base_recents.xlsx doit être mis ici
 - doc:
     - json comportant l'encodage des variables qualitatives
 - scripts: 

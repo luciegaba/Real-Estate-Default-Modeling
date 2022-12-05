@@ -23,6 +23,7 @@ def missing_rate_report(X_train:pd.DataFrame) -> pd.DataFrame:
     return missing_rate
 
 
+<<<<<<< HEAD
 """ MAP AVEC DEFAUT"""
 def map_for_default_risk(df_geo:pd.DataFrame):
  
@@ -36,6 +37,10 @@ def map_for_default_risk(df_geo:pd.DataFrame):
 
 
 """ HISTOGRAMME DEFAUT DANS LE TEMPS"""
+=======
+
+
+>>>>>>> 4c470fd27f79553bbf847efb90a24a2a8014f05b
 def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
 
     sns.histplot(raw_data["date_debloc_avec_crd"].astype(str).str[:7])
@@ -53,8 +58,11 @@ def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
 
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4c470fd27f79553bbf847efb90a24a2a8014f05b
 """ TIME STABILITY """
 
 """ Les fonctions suivantes ont toutes les mêmes arguments: 
