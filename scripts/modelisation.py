@@ -119,8 +119,6 @@ def evaluation(model,x_train:pd.DataFrame,x_test:pd.DataFrame,y_train:pd.DataFra
     plt.xlim([0,1])
     plt.ylim([0,1])
     plt.legend()
-    plt.figure(figsize= (9,9))
-    plt.figure(figsize= (9,9))
 
 
 
@@ -130,6 +128,7 @@ def get_coeff_for_model(logistic_model, x_train:pd.DataFrame)-> pd.DataFrame:
         """
         coeff = pd.DataFrame( abs(logistic_model.coef_.T), index = x_train.columns, columns = ['coef']).reset_index()
         coeff = coeff.sort_values(by = 'index') 
+
         return coeff
 
 

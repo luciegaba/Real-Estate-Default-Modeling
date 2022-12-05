@@ -37,7 +37,6 @@ git pull
 
 Configurer l'environnement du projet:
 
-
 Créer un environnement virtuel 
 
 ```
@@ -49,4 +48,28 @@ pip install -r requirements.txt
 ```
 
 Ensuite, vous pouvez aisément accéder au(x) notebook(s)
-Il suffit juste de dérouler le notebook 
+Il suffit juste de dérouler les notebooks!
+
+## Organisation du projet
+Ce dossier est composé de plusieurs élements:
+- 3 notebooks: 
+    - Processing (Analyse exploratoire, nettoyage, et sélection de variables )
+    - Modelling (Régression logistique et modèle concurrent)
+    - Clustering de risque (Kmeans + graph)
+- app: dossier de l'app dashboard streamlit (il faudra se placer dans ce repo pour lancer l'app : commande terminal ``` streamlit run app.py ``)
+- artefacts: contient les modèles de ml stockés 
+- data: 
+    - external: données de bases externes comme variables auxiliaires et longitude/latitude
+    - output: données créées au sein du projet
+    - Base_recents.xlsx
+- doc:
+    - json comportant l'encodage des variables qualitatives
+- scripts: 
+    - discretisation
+    - feature_selection
+    - firstep_dataviz
+    - group_cat_variables
+    - modelisation
+    - processing
+    - pipeline_preprocessing (à utiliser pour directement traiter un jeu de données et le preprocesser entièrement pour le ml/modélisation)
+    

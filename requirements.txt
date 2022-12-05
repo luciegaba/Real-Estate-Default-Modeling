@@ -9,11 +9,10 @@ Cmake
 qdldl
 optbinning
 openpyxl
-Cmake
-qdldl
-jinja2
-bokeh
 sklearn
 xgboost
 plotly
-
+streamlit
+folium
+streamlit_folium
+shap

@@ -2,6 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.express as px
 
 
 """ EXPLORATORY DATAVIZ """
@@ -13,6 +14,7 @@ def min_max_for_datetime_col(raw_data:pd.DataFrame,col:str)-> None:
     print(f"Date maximale pour {col}:", raw_data["date_debloc_avec_crd"].max())
 
 
+""" MISSING RATE REPORT """
 def missing_rate_report(X_train:pd.DataFrame) -> pd.DataFrame:
 
     missing_rate=pd.DataFrame({'count': X_train.isna().sum(),
@@ -20,6 +22,20 @@ def missing_rate_report(X_train:pd.DataFrame) -> pd.DataFrame:
     display(missing_rate)
     return missing_rate
 
+
+""" MAP AVEC DEFAUT"""
+def map_for_default_risk(df_geo:pd.DataFrame):
+ 
+    fig = px.density_mapbox(df_geo, lat='latitude', lon='longitude',z='defaut_36mois', radius=8,
+                        center=dict(lat=df_geo['latitude'].mean(), lon=df_geo['longitude'].mean()), zoom=4.5,
+                        mapbox_style="carto-positron", opacity=0.8,width=800, height=800, title="Map of default occurences (1=> many defaults; 0=> few defaults)"
+                        , range_color =[21,21])
+    fig.show()
+
+
+
+
+""" HISTOGRAMME DEFAUT DANS LE TEMPS"""
 def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
 
     sns.histplot(raw_data["date_debloc_avec_crd"].astype(str).str[:7])
@@ -32,6 +48,10 @@ def stabilite_global_temps(raw_data:pd.DataFrame) -> None:
     plt.title("Stabilité de l'ensemble de l'échantillon sur la période d'étude (par année)")
     plt.xticks(rotation=80, size = 8)
     plt.figure(figsize=(14, 14))
+
+
+
+
 
 
 
@@ -101,6 +121,8 @@ def stability_according_to_the_target(raw_data:pd.DataFrame, date:str) -> None:
 
 def stability_by_repartition_of_modalities(raw_data:pd.DataFrame,date:str)-> None:
 
+    """ retourne un graphique pour chaque variable candidate à la modélisation de la stabilité de la répartition du défaut selon ses modalités
+    """ 
     print("STABILITE DE LA REPARTITION DES MODALITES")
 
     for col in raw_data.drop([ date, 'defaut_36mois'], axis=1):
@@ -119,8 +141,11 @@ def stability_by_repartition_of_modalities(raw_data:pd.DataFrame,date:str)-> Non
     
 
 
-def stability_by_repartition_of_defaults(raw_data:pd.DataFrame ,date: str):
 
+
+def stability_by_repartition_of_defaults(raw_data:pd.DataFrame ,date: str):
+    """ retourne un graphique pour chaque variable candidate à la modélisation de la stabilité de la répartition des modalités
+    """ 
     print("STABILITE DE LA REPARTITION DES MODALITES SELON LE TAUX DE DEFAUT")
 
 
@@ -137,6 +162,8 @@ def stability_by_repartition_of_defaults(raw_data:pd.DataFrame ,date: str):
 
         df_col_new=df_col_new.drop(list_col_drop, axis=1)
         df_col_new.plot()
+
+
 
 
 
